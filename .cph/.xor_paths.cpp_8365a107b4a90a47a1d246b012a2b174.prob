@@ -1,0 +1,1 @@
+{"name":"Local: xor_paths","url":"c:\\Users\\Admin\\Desktop\\DSA\\xor_paths.cpp","tests":[{"id":1723357791245,"input":"3 3 11\n2 1 5\n7 10 0\n12 6 4\n","output":"3"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Admin\\Desktop\\DSA\\xor_paths.cpp","group":"local","local":true}

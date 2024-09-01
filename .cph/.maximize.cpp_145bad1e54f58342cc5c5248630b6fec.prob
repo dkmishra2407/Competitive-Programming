@@ -1,0 +1,1 @@
+{"name":"Local: maximize","url":"c:\\Users\\Admin\\Desktop\\DSA\\maximize.cpp","tests":[{"id":1723296509379,"input":"7\n10\n7\n21\n100\n2\n1000\n6\n","output":"5\n6\n18\n98\n1\n750\n3\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Admin\\Desktop\\DSA\\maximize.cpp","group":"local","local":true}

@@ -1,0 +1,1 @@
+{"name":"Local: BoardMoves","url":"c:\\Users\\Admin\\Desktop\\DSA\\BoardMoves.cpp","tests":[{"id":1723904731361,"input":"3\n1\n5\n499993\n","output":"0\n40\n41664916690999888\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Admin\\Desktop\\DSA\\BoardMoves.cpp","group":"local","local":true}

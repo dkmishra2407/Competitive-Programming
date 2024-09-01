@@ -1,0 +1,333 @@
+ ///////////////////////////////////////////////////////////   QUES 11 //////////////////////////////////////////////////////////////
+
+
+The error message "Table 'q11.parts' doesn't exist" indicates that MySQL is unable to find the parts table in the specified database (q11). This error occurs when the table referenced in the trigger (parts) is not found in the database.
+
+
+
+1 --> 
+
+USE your_database_name; -- Replace "your_database_name" with the actual name of your database
+
+DELIMITER //
+
+CREATE TRIGGER parts_update_trigger
+BEFORE UPDATE ON parts
+FOR EACH ROW
+BEGIN
+    IF OLD.price != NEW.price THEN
+        INSERT INTO parts_log (pno, old_price, new_price)
+        VALUES (OLD.pno, OLD.price, NEW.price);
+    END IF;
+END;
+//
+
+DELIMITER ;
+
+2 -->
+DELIMITER //
+
+CREATE PROCEDURE UpdatePriceBasedOnQt(IN p_part_number INT)
+BEGIN
+    DECLARE old_price DECIMAL(10, 2);
+    DECLARE new_price DECIMAL(10, 2);
+    DECLARE qty_in_hand INT;
+
+    -- Get the old price and quantity in hand for the given part number
+    SELECT price, qty_in_hands INTO old_price, qty_in_hand
+    FROM part
+    WHERE pno = p_part_number;
+
+    -- Update the price based on quantity in hand
+    IF qty_in_hand > 200 THEN
+        SET new_price = old_price * 0.8; -- 80% of old price
+    ELSE
+        SET new_price = old_price * 0.7; -- 70% of old price
+    END IF;
+
+    -- Update the parts table with the new price
+    UPDATE part
+    SET price = new_price
+    WHERE pno = p_part_number;
+
+    -- Optionally, you can print a message or return a result
+    SELECT CONCAT('Price updated for part ', p_part_number, ' to ', new_price) AS Message;
+END;
+//
+
+DELIMITER ;
+
+
+
+/////////////////////////////////////////////////////////////////////////   QUES 9       //////////////////////////////////////////////////////////////////////////////////////////
+
+********************************************
+ALTER TABLE ChildTable			
+ADD CONSTRAINT FK_Name   // FK_Name  IS DIFFERENT FOR ALL 
+FOREIGN KEY (ChildColumn)
+REFERENCES ParentTable(ParentColumn);
+
+********************************************
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   TABLE  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+ CREATE TABLE Employees(E_id int primary key ,fname varchar(20),lname varchar(20),email varchar(20),ph_no int , hire_date date , job_id int , salary int , dep_id int);
+
+CREATE TABLE Works (FORIEGN KEY e_id REFERENCE Employees(E_id), M_id int primary key);
+
+CREATE TABLE Departments (D_id int primary key , dep_name varchar(20), location_id int);
+
+CREATE TABLE Jobs(J_id int primary key , job_title varchar(20), min_salary int , max_salary int );
+
+CREATE TABLE Locations (L_id int primary key , street varchar(20), state varchar(20),country varchar(20));
+
+CREATE TABLE Job_history (FORIGEN KEY E_id REFERENCE Employees(E_id) , PRIMARY KEY (hire_date,leaving_date) , salary , FORIGEN KEY J_id REFERENCE Jobs(J_id) , FORIGEN KEY D_id REFERENCE Departments(D_id) );
+
+
+ALTER TABLE Departments
+ADD CONSTRAINT fk
+FOREIGN KEY (location_id )
+REFERENCES Locations(L_id);
+
+ALTER TABLE Employees
+ADD CONSTRAINT fk1
+FOREIGN KEY (dep_id )
+REFERENCES Departments(D_id);
+
+ALTER TABLE Employees
+ADD CONSTRAINT fk2
+FOREIGN KEY (job_id )
+REFERENCES Jobs(J_id);
+
+
+******************************************  ERROR WHILE INSERTING *********************************************
+
+ERROR 1:- 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`q9`.`employees`, CONSTRAINT `fk1` FOREIGN KEY (`dep_id`) REFERENCES `departments` (`D_id`))
+
+SOLUTION :- For This Insert The Values In the Primary Key For Which We Written the reference key the fill this table (INSERT IN FIRST IN THE TABLE WHERE NO FEFERNCE KEY IS USED)
+
+
+ERROR 2 :- mysql> ALTER TABLE job_history
+    -> ADD CONSTRAINT fk4
+    -> FOREIGN KEY (hire_date)
+    -> REFERENCES Employees(hire_date);
+ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for constraint 'fk4' in the referenced table 'employees'
+
+SOLUTION :- 
+The error message you received indicates that there is no index on the hire_date column in the referenced table employees. In MySQL, when you define a foreign key constraint, it requires an index on the referenced column(s) in the parent table to optimize the lookup process.
+To resolve this issue, you can create an index on the hire_date column in the employees table, and then reattempt to add the foreign key constraint. Here's how you can do it:
+
+mysql> CREATE INDEX idx_hire_date ON employees (hire_date);
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE job_history
+    -> ADD CONSTRAINT hdate FOREIGN KEY (hire_date) REFERENCES employees(hire_date);
+Query OK, 0 rows affected (0.12 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+QUESTIONS :--->
+
+SELECT department_id, COUNT(Employee_id) AS num_employees
+FROM Job_history
+GROUP BY department_id
+ORDER BY num_employees DESC
+LIMIT 1;
+
+
+PROCEDURE : -
+
+DELIMITER //
+
+CREATE PROCEDURE proc1(IN dep_id INT)
+BEGIN
+    DECLARE max_sal INT;
+    DECLARE min_sal INT;
+
+    SELECT MAX(E.salary) INTO max_sal
+    FROM Employees E
+    INNER JOIN Job_history J ON J.D_id = E.dep_id
+    WHERE J.D_id = dep_id;
+
+    SELECT MIN(E.salary) INTO min_sal
+    FROM Employees E
+    INNER JOIN Job_history J ON J.D_id = E.dep_id
+    WHERE J.D_id = dep_id;
+
+    SELECT CONCAT('MAX IS ', max_sal, ' MIN IS ', min_sal) AS result;
+END;
+//
+
+DELIMITER ;
+
+TRIGGER :- 
+
+DELIMITER //
+
+CREATE TRIGGER employee_dep_change_trigger
+AFTER UPDATE ON Employees
+FOR EACH ROW
+BEGIN
+    IF OLD.dep_id <> NEW.dep_id THEN
+        INSERT INTO PreviousEmployeeDetails (E_id, previous_dep_id, previous_salary, previous_hire_date)
+        VALUES (OLD.E_id, OLD.dep_id, OLD.salary, OLD.hire_date);
+    END IF;
+END;
+//
+
+DELIMITER ;
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+The COALESCE function in SQL is used to return the first non-null expression in a list. It takes multiple arguments and returns the first non-null value among them. Here's how COALESCE works:
+SELECT COALESCE(NULL, 1, 2, NULL, 3) AS result;
+result
+------
+1
+
+
+
+/////////////////////////////////////////   Q15 ////////////////////////////////////////
+
+CREATE TABLE Employee (p_name varchar(50) primary key, street varchar(50), city varchar(20));
+
+CREATE TABLE works (
+    p_name VARCHAR(50),
+    c_name VARCHAR(50),
+    FOREIGN KEY (p_name) REFERENCES Employee(p_name),
+    FOREIGN KEY (c_name) REFERENCES Company(c_name), 
+    salary int
+);
+
+CREATE TABLE Company (c_name varchar(50), city varchar(50));
+
+CREATE TABLE Manages (
+    p_name VARCHAR(50),
+    c_name VARCHAR(50),
+    FOREIGN KEY (p_name) REFERENCES Employee(p_name),
+    FOREIGN KEY (c_name) REFERENCES Company(c_name)
+);
+
+
+1) 
+
+SELECT person_name, street, city
+FROM Employee
+WHERE person_name IN (
+    SELECT person_name
+    FROM Works
+    WHERE salary > 10000
+    AND company_name = 'First Bank Corporation'
+);
+
+
+2)
+
+3)
+******************************************************************
+SELECT e.person_name
+FROM Employee e
+JOIN Manages m ON e.person_name = m.person_name
+JOIN Employee manager ON m.manager_name = manager.person_name
+WHERE e.city = manager.city AND e.street = manager.street;
+
+******************************************************************
+
+
+//////////////////////////////////////////////////////////////////////   QUES 4 //////////////////////////////////////////////////////////////////////////////
+
+
+
+QUESTION 21 
+***********************  ERROR  *****************************
+The error you're encountering is due to the ONLY_FULL_GROUP_BY mode in MySQL, which requires that all columns in the SELECT clause that are not part of an aggregate function (such as COUNT, SUM, MAX, etc.) must also be included in the GROUP BY clause. To resolve this error, you can modify your query to include D_NAME in the GROUP BY clause:
+sql
+
+
+mysql> SELECT D_NAME, FLOOR_NUM
+    -> FROM DEPT
+    -> GROUP BY FLOOR_NUM
+    -> HAVING COUNT(D_ID) >= 3;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'q21.DEPT.D_NAME' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+
+***************************************************************
+
+
+********************* SOLUTION **************************
+SELECT D_NAME, FLOOR_NUM
+    -> FROM DEPT
+    -> GROUP BY D_NAME, FLOOR_NUM
+    -> HAVING COUNT(D_ID) >= 3;
+
+************************************************
+
+
+CURDATE()  --> GIVES US THE CURRENT DATE 
+DATE(S.BILL_DATE) = CURDATE()  --> FOR VALIDATION YOU CAN USE THIS
+
+
+
+********************************* Computed column *******************************************
+CREATE TABLE ORDER_DETAILS (
+    BILL_ID INT PRIMARY KEY,
+    QTY INT,
+    UNIT_PRICE INT,
+    TOTAL INT AS (UNIT_PRICE * QTY) -- Computed column
+);
+****************************************************************************
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$    ERROR   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+ SELECT C.C_NAME FROM CUSTOMER C
+    -> JOIN Orders O ON C.C_ID = O.C_ID
+    -> WHERE O.BILL_ID IN (SELECT BILL_ID FROM ORDER_DETAILS ORDER BY Total DESC LIMIT 1);
+ERROR 1235 (42000): This version of MySQL doesn't yet support 'LIMIT & IN/ALL/ANY/SOME subquery'
+
+SOLUTION ------------------------------------------------>>>>>>>>>>>>>>>>>>>>>>
+
+SELECT C.C_NAME
+FROM CUSTOMER C
+JOIN Orders O ON C.C_ID = O.C_ID
+JOIN (
+    SELECT BILL_ID
+    FROM ORDER_DETAILS
+    ORDER BY TOTAL DESC
+    LIMIT 1
+) OD ON O.BILL_ID = OD.BILL_ID;
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   LEETCODE    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+LEAD() is a window function in SQL that allows you to access data from the next row within the same result set. It is often used in conjunction with the ORDER BY clause to define the order of rows. Here's an explanation of how LEAD() works:
+
+LEAD(expression [, offset [, default]]) OVER (ORDER BY ...)
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$    ON DELETE CASCADE    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+ --> WHILE CREATING THE TABLE YOU CREATE TABLE SUCH THAT WE CAN USE IT
+EXAMPE:-
+        CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    order_date DATE
+);
+
+CREATE TABLE order_items (
+    item_id INT PRIMARY KEY,
+    order_id INT,
+    item_name VARCHAR(100),
+    quantity INT,
+    price DECIMAL(10, 2),
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE
+);
+
+
+ -----------  WHEN WE DELETE order_id THEN IT AUTOMATICALLY DELETE THIS ID FROM OTHER DEPENDENT TABLE ALSO  --------------------------
+
+
+
+

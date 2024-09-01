@@ -1,0 +1,1 @@
+{"name":"Local: shifts_and_sorting","url":"c:\\Users\\Admin\\Desktop\\DSA\\shifts_and_sorting.cpp","tests":[{"id":1723293922684,"input":"5\n10\n0000\n11000\n101011\n01101001\n","output":"2\n0\n9\n5\n11\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Admin\\Desktop\\DSA\\shifts_and_sorting.cpp","group":"local","local":true}

@@ -1,0 +1,1 @@
+{"name":"Local: ThornsandCoins","url":"c:\\Users\\Admin\\Desktop\\DSA\\ThornsandCoins.cpp","tests":[{"id":1723812771747,"input":"3\n10\n.@@*@.**@@\n5\n.@@@@\n15\n.@@..@***..@@@*\n","output":"3\n4\n3\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Admin\\Desktop\\DSA\\ThornsandCoins.cpp","group":"local","local":true}
