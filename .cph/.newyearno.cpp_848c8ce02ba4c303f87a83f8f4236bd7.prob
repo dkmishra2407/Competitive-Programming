@@ -1,0 +1,1 @@
+{"name":"Local: newyearno","url":"c:\\Users\\Admin\\Desktop\\Competitive-Programming\\DSA\\newyearno.cpp","tests":[{"id":1725263932303,"input":"5\n1\n4041\n4042\n8081\n8079\n","output":"NO\nYES\nYES\nYES\nNO\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Admin\\Desktop\\Competitive-Programming\\DSA\\newyearno.cpp","group":"local","local":true}
