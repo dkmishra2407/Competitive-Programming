@@ -5,15 +5,9 @@ int main(){
     int t;
     cin >> t;
     while(t--){
+        // Your code here
         int n;
         cin>>n;
-
-        vector<int> ans(n);
-
-        for(int i=0;i<n;i++){
-            cin>>ans[i];
-        }
-
         
     }
     return 0;
