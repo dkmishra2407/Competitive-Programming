@@ -1,0 +1,1 @@
+{"name":"Local: DFSChecker","url":"c:\\Users\\Admin\\Desktop\\Competitive-Programming\\DSA\\DFSChecker.cpp","tests":[{"id":1727870424880,"input":"4\n2 5 9\n3 5 9\n3 5 11\n4 5 11\n","output":"9\n14\n15\n20\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Admin\\Desktop\\Competitive-Programming\\DSA\\DFSChecker.cpp","group":"local","local":true}
