@@ -1,0 +1,1 @@
+{"name":"Local: Twins","url":"c:\\Users\\Admin\\Desktop\\Competitive-Programming\\DSA\\Twins.cpp","tests":[{"id":1728095598047,"input":"2\n3 3\n","output":"2"},{"id":1728095608390,"input":"3\n2 1 2\n","output":"2"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Admin\\Desktop\\Competitive-Programming\\DSA\\Twins.cpp","group":"local","local":true}

@@ -1,0 +1,1 @@
+{"name":"Local: FlagDay","url":"c:\\Users\\Admin\\Desktop\\Competitive-Programming\\DSA\\FlagDay.cpp","tests":[{"id":1728355656452,"input":"7 3\n1 2 3\n1 4 5\n4 6 7\n","output":"1 2 3 3 2 2 1 \n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Admin\\Desktop\\Competitive-Programming\\DSA\\FlagDay.cpp","group":"local","local":true}
